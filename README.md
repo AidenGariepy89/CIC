@@ -35,7 +35,10 @@ Now you should be all setup to run the project!
 # How do I run this?
 
 In VSCode (or whatever editor you are using) open a terminal. Make sure you
-are in the root folder of the project, and type the command `air`.
+are in the root folder of the project, and type the command:
+```sh
+air
+```
 
 This will begin to "hot-reload", which means that as you work on the project and save
 your progress, it will automatically reload the server so you can see your changes
