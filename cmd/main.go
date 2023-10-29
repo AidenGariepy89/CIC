@@ -2,11 +2,10 @@ package main
 
 import (
 	"cic/site/pkg/db"
-	"cic/site/pkg/models/gifts"
+	"cic/site/pkg/router"
 	"html/template"
 	"io"
 	"log"
-	"net/http"
 	"path"
 
 	"github.com/labstack/echo/v4"
@@ -24,47 +23,33 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 }
 
 func main() {
+	// Parse templates
 	templates, err := template.ParseGlob(path.Join(template_files, "*.html"))
 	if err != nil {
 		log.Fatalf("Error loading templates: %v\n", err)
 	}
 
+	// Initialize Database
 	err = db.InitDb("file:tmp/quiz.db")
 	if err != nil {
 		log.Fatalf("Error creating db: %v\n", err)
 	}
 
-	err = test()
-	if err != nil {
-		log.Fatalf("Error testing: %v\n", err)
-	}
-
+	// Setup Echo server
 	e := echo.New()
 
 	e.Renderer = &TemplateRenderer{
 		template: templates,
 	}
 
+	// Middlware
 	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
-	e.GET("/", func(c echo.Context) error {
-		return c.Render(http.StatusOK, "index.html", nil)
-	})
+	// Routing
+	e.GET("/", router.Index)
+	e.GET("/q", router.Questions)
 
+	// Serve
 	e.Logger.Fatal(e.Start(":42069"))
-}
-
-func test() error {
-	questions, err := gifts.GetQuestions()
-	if err != nil {
-		return err
-	}
-
-	for i := 0; i < len(*questions); i++ {
-		question := &(*questions)[i]
-
-		log.Printf("Question: %v: %c | %v\n", question.Id, question.Gift, question.Content)
-	}
-
-	return nil
 }
