@@ -5,6 +5,13 @@ import (
 	"fmt"
 )
 
+type Gift struct {
+	Id          int
+	Name        string
+	Description string
+	Key         rune
+}
+
 type Question struct {
 	Id      int
 	Content string
@@ -69,4 +76,28 @@ func GetQuestionsByGift(gift rune) (*[]Question, error) {
 	}
 
 	return &questions, nil
+}
+
+func GetGifts() (*[]Gift, error) {
+	rows, err := db.Db.Query("SELECT * FROM gift;")
+	if err != nil {
+		return nil, fmt.Errorf("Error fetching questions from db: %w\n", err)
+	}
+
+	var gifts []Gift
+	for rows.Next() {
+		var id int
+		var name string
+		var description string
+		var key rune
+
+		err = rows.Scan(&id, &name, &description, &key)
+		if err != nil {
+			return nil, fmt.Errorf("Error scanning question: %w\n", err)
+		}
+
+		gifts = append(gifts, Gift{id, name, description, key})
+	}
+
+	return &gifts, nil
 }

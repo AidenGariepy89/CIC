@@ -19,3 +19,12 @@ func Questions(c echo.Context) error {
 
 	return c.Render(http.StatusOK, "questions.html", questions)
 }
+
+func Gifts(c echo.Context) error {
+	g, err := gifts.GetGifts()
+	if err != nil {
+		return err
+	}
+
+	return c.Render(http.StatusOK, "gifts.html", g)
+}

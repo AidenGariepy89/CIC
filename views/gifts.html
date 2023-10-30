@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <!-- this page is for testing only -->
+
+        <ul>
+            {{range $gift := .}}
+            <li>
+                <h3>{{$gift.Name}}</h3>
+                <p>{{$gift.Description}}</p>
+            </li>
+            {{end}}
+        </ul>
+    </body>
+</html>

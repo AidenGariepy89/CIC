@@ -49,6 +49,7 @@ func main() {
 	// Routing
 	e.GET("/", router.Index)
 	e.GET("/q", router.Questions)
+    e.GET("/g", router.Gifts)
 
 	// Serve
 	e.Logger.Fatal(e.Start(":42069"))

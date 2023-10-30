@@ -15,6 +15,7 @@ func InitDb(url string) error {
 		return err
 	}
 
+	// Init Questions Table
 	result := db.QueryRow("SELECT name FROM sqlite_master WHERE type='table' AND name='question'")
 
 	var name string
@@ -26,7 +27,58 @@ func InitDb(url string) error {
 		}
 	}
 
+    // Init Gift Table
+	result = db.QueryRow("SELECT name FROM sqlite_master WHERE type='table' AND name='gift'")
+
+	err = result.Scan(&name)
+	if err != nil && name == "" {
+		err = setupGifts(db)
+		if err != nil {
+			return err
+		}
+	}
+
 	Db = db
+	return nil
+}
+
+func setupGifts(db *sql.DB) error {
+	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS gift (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        description TEXT NOT NULL,
+        key INTEGER NOT NULL
+    )`)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(`BEGIN TRANSACTION;
+        INSERT INTO gift (name, description, key) VALUES ("Administration", "", 65);
+        INSERT INTO gift (name, description, key) VALUES ("Apostleship", "", 66);
+        INSERT INTO gift (name, description, key) VALUES ("Crafting/Craftsmanship", "", 67);
+        INSERT INTO gift (name, description, key) VALUES ("Creative Communication", "", 68);
+        INSERT INTO gift (name, description, key) VALUES ("Discernment", "", 69);
+        INSERT INTO gift (name, description, key) VALUES ("Encouragement", "", 70);
+        INSERT INTO gift (name, description, key) VALUES ("Evangelism", "", 71);
+        INSERT INTO gift (name, description, key) VALUES ("Faith", "", 72);
+        INSERT INTO gift (name, description, key) VALUES ("Giving", "", 73);
+        INSERT INTO gift (name, description, key) VALUES ("Helps", "", 74);
+        INSERT INTO gift (name, description, key) VALUES ("Hospitality", "", 75);
+        INSERT INTO gift (name, description, key) VALUES ("Intercession", "", 76);
+        INSERT INTO gift (name, description, key) VALUES ("Knowledge", "", 77);
+        INSERT INTO gift (name, description, key) VALUES ("Leadership", "", 78);
+        INSERT INTO gift (name, description, key) VALUES ("Mercy", "", 79);
+        INSERT INTO gift (name, description, key) VALUES ("Prophecy", "", 80);
+        INSERT INTO gift (name, description, key) VALUES ("Shepherding", "", 81);
+        INSERT INTO gift (name, description, key) VALUES ("Teaching", "", 82);
+        INSERT INTO gift (name, description, key) VALUES ("Wisdom", "", 83);
+        COMMIT;
+    `)
+    if err != nil {
+        return err
+    }
+
 	return nil
 }
 
