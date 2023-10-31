@@ -46,15 +46,16 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-    // Static files
-    e.Static("/js", "public/js")
-    e.Static("/css", "public/css")
+	// Static files
+	e.Static("/js", "public/js")
+	e.Static("/css", "public/css")
 
 	// Routing
 	e.GET("/", router.Index)
+	e.GET("/spiritual-gifts", router.SpiritualGifts)
+    e.POST("/spiritual-gifts/submit", router.SubmitAnswers)
 	e.GET("/test/q", router.Questions)
 	e.GET("/test/g", router.Gifts)
-	e.GET("/test/sa", router.SubmitAnswers)
 
 	// Serve
 	e.Logger.Fatal(e.Start(":42069"))

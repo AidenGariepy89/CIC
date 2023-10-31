@@ -23,7 +23,7 @@ type Answer struct {
 	Id         int
 	UserId     int
 	QuestionId int
-	Answer     int // Range: [0, 3]
+    Answer     int `form:"answer"`// Range: [0, 3]
 }
 
 func GetQuestions() (*[]Question, error) {

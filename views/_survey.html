@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="/css/quiz.css">
+<ul>
+    {{range $q := .}}
+    <form class="question" action="/spiritual-gifts/submit" method="POST">
+        <h2>{{$q.Content}}</h2>
+        <ul>
+            <input id="question-{{$q.Id}}-3" type="radio" name="answer">
+            <label for="question-{{$q.Id}}-3">Consistently, definitely true</label>
+            <input id="question-{{$q.Id}}-2" type="radio" name="answer">
+            <label for="question-{{$q.Id}}-2">Most of the time, usually true</label>
+            <input id="question-{{$q.Id}}-1" type="radio" name="answer">
+            <label for="question-{{$q.Id}}-1">Some of the time, once in a while</label>
+            <input id="question-{{$q.Id}}-0" type="radio" name="answer">
+            <label for="question-{{$q.Id}}-0">Not at all, never</label>
+            <input type="submit">
+        </ul>
+    </form>
+    {{end}}
+</ul>

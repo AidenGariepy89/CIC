@@ -291,7 +291,7 @@ func setupQuestions(db *sql.DB) error {
         INSERT INTO question (content, gift) VALUES ("I readily and happily use my natural or learned skills to help wherever needed.", 74);
         INSERT INTO question (content, gift) VALUES ("I can make people feel at ease even in unfamiliar surroundings.", 75);
         INSERT INTO question (content, gift) VALUES ("I often see specific results in direct response to my prayers.", 76);
-        INSERT INTO question (content, gift) VALUES (".  I confidently share my knowledge and insights with others.", 77);
+        INSERT INTO question (content, gift) VALUES ("I confidently share my knowledge and insights with others.", 77);
         INSERT INTO question (content, gift) VALUES ("I figure out where we need to go and help others to get there.", 78);
         INSERT INTO question (content, gift) VALUES ("I enjoy doing practical things for others who are in need.", 79);
         INSERT INTO question (content, gift) VALUES ("I feel compelled to expose sin wherever I see it and to challenge people to repentance.", 80);
