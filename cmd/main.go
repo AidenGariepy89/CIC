@@ -10,6 +10,10 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+
+    "github.com/gotailwindcss/tailwind/twembed"
+    "github.com/gotailwindcss/tailwind/twhandler"
+
 )
 
 const template_files string = "views"
