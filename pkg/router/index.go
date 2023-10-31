@@ -28,3 +28,12 @@ func Gifts(c echo.Context) error {
 
 	return c.Render(http.StatusOK, "gifts.html", g)
 }
+
+func SubmitAnswers(c echo.Context) error {
+	err := gifts.SubmitAnswer(0, 1, 1)
+	if err != nil {
+		return err
+	}
+
+	return c.String(http.StatusOK, "test answer added to database")
+}

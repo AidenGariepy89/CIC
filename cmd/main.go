@@ -48,8 +48,9 @@ func main() {
 
 	// Routing
 	e.GET("/", router.Index)
-	e.GET("/q", router.Questions)
-    e.GET("/g", router.Gifts)
+	e.GET("/test/q", router.Questions)
+	e.GET("/test/g", router.Gifts)
+	e.GET("/test/sa", router.SubmitAnswers)
 
 	// Serve
 	e.Logger.Fatal(e.Start(":42069"))
