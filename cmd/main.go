@@ -49,6 +49,7 @@ func main() {
 	// Static files
 	e.Static("/js", "public/js")
 	e.Static("/css", "public/css")
+    e.Static("/img", "public/img")
 
 	// Routing
 	e.GET("/", router.Index)
