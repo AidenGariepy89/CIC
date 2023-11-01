@@ -1,7 +1,7 @@
 package main
 
 import (
-	"cic/site/pkg/db"
+	// "cic/site/pkg/db"
 	"cic/site/pkg/router"
 	"html/template"
 	"io"
@@ -10,10 +10,6 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-
-    "github.com/gotailwindcss/tailwind/twembed"
-    "github.com/gotailwindcss/tailwind/twhandler"
-
 )
 
 const template_files string = "views"
@@ -34,10 +30,10 @@ func main() {
 	}
 
 	// Initialize Database
-	err = db.InitDb("file:tmp/quiz.db")
-	if err != nil {
-		log.Fatalf("Error creating db: %v\n", err)
-	}
+	// err = db.InitDb("file:tmp/quiz.db")
+	// if err != nil {
+	// 	log.Fatalf("Error creating db: %v\n", err)
+	// }
 
 	// Setup Echo server
 	e := echo.New()
@@ -50,9 +46,9 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-    // Static files
-    e.Static("/js", "public/js")
-    e.Static("/css", "public/css")
+	// Static files
+	e.Static("/js", "public/js")
+	e.Static("/css", "public/css")
 
 	// Routing
 	e.GET("/", router.Index)
