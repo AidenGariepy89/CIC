@@ -15,10 +15,21 @@ func InitDb(url string) error {
 		return err
 	}
 
+	err = seedData(db)
+	if err != nil {
+		return err
+	}
+
+	Db = db
+	return nil
+}
+
+func seedData(db *sql.DB) error {
+	// Init Questions Table
 	result := db.QueryRow("SELECT name FROM sqlite_master WHERE type='table' AND name='question'")
 
 	var name string
-	err = result.Scan(&name)
+	err := result.Scan(&name)
 	if err != nil && name == "" {
 		err = setupQuestions(db)
 		if err != nil {
@@ -26,7 +37,114 @@ func InitDb(url string) error {
 		}
 	}
 
-	Db = db
+	// Init Gift Table
+	result = db.QueryRow("SELECT name FROM sqlite_master WHERE type='table' AND name='gift'")
+
+	err = result.Scan(&name)
+	if err != nil && name == "" {
+		err = setupGifts(db)
+		if err != nil {
+			return err
+		}
+	}
+
+	// Init Gift Table
+	result = db.QueryRow("SELECT name FROM sqlite_master WHERE type='table' AND name='user'")
+
+	err = result.Scan(&name)
+	if err != nil && name == "" {
+		err = setupUsers(db)
+		if err != nil {
+			return err
+		}
+	}
+
+	// Init Answer Table
+	result = db.QueryRow("SELECT name FROM sqlite_master WHERE type='table' AND name='answer'")
+
+	err = result.Scan(&name)
+	if err != nil && name == "" {
+		err = setupAnswers(db)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func setupAnswers(db *sql.DB) error {
+	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS answer (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        userId INTEGER NOT NULL,
+        questionId INTEGER NOT NULL,
+        answer INTEGER NOT NULL,
+        FOREIGN KEY(userId) REFERENCES user(id),
+        FOREIGN KEY(questionId) REFERENCES question(id)
+    )`)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func setupUsers(db *sql.DB) error {
+	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS user (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        password TEXT NOT NULL
+    )`)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(`BEGIN TRANSACTION;
+        INSERT INTO user (username, password) VALUES ("admin", "admin");
+        INSERT INTO user (username, password) VALUES ("demo", "demo");
+        COMMIT;
+    `)
+
+	return nil
+}
+
+func setupGifts(db *sql.DB) error {
+	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS gift (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        description TEXT NOT NULL,
+        key INTEGER NOT NULL
+    )`)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(`BEGIN TRANSACTION;
+        INSERT INTO gift (name, description, key) VALUES ("Administration", "", 65);
+        INSERT INTO gift (name, description, key) VALUES ("Apostleship", "", 66);
+        INSERT INTO gift (name, description, key) VALUES ("Crafting/Craftsmanship", "", 67);
+        INSERT INTO gift (name, description, key) VALUES ("Creative Communication", "", 68);
+        INSERT INTO gift (name, description, key) VALUES ("Discernment", "", 69);
+        INSERT INTO gift (name, description, key) VALUES ("Encouragement", "", 70);
+        INSERT INTO gift (name, description, key) VALUES ("Evangelism", "", 71);
+        INSERT INTO gift (name, description, key) VALUES ("Faith", "", 72);
+        INSERT INTO gift (name, description, key) VALUES ("Giving", "", 73);
+        INSERT INTO gift (name, description, key) VALUES ("Helps", "", 74);
+        INSERT INTO gift (name, description, key) VALUES ("Hospitality", "", 75);
+        INSERT INTO gift (name, description, key) VALUES ("Intercession", "", 76);
+        INSERT INTO gift (name, description, key) VALUES ("Knowledge", "", 77);
+        INSERT INTO gift (name, description, key) VALUES ("Leadership", "", 78);
+        INSERT INTO gift (name, description, key) VALUES ("Mercy", "", 79);
+        INSERT INTO gift (name, description, key) VALUES ("Prophecy", "", 80);
+        INSERT INTO gift (name, description, key) VALUES ("Shepherding", "", 81);
+        INSERT INTO gift (name, description, key) VALUES ("Teaching", "", 82);
+        INSERT INTO gift (name, description, key) VALUES ("Wisdom", "", 83);
+        COMMIT;
+    `)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -173,7 +291,7 @@ func setupQuestions(db *sql.DB) error {
         INSERT INTO question (content, gift) VALUES ("I readily and happily use my natural or learned skills to help wherever needed.", 74);
         INSERT INTO question (content, gift) VALUES ("I can make people feel at ease even in unfamiliar surroundings.", 75);
         INSERT INTO question (content, gift) VALUES ("I often see specific results in direct response to my prayers.", 76);
-        INSERT INTO question (content, gift) VALUES (".  I confidently share my knowledge and insights with others.", 77);
+        INSERT INTO question (content, gift) VALUES ("I confidently share my knowledge and insights with others.", 77);
         INSERT INTO question (content, gift) VALUES ("I figure out where we need to go and help others to get there.", 78);
         INSERT INTO question (content, gift) VALUES ("I enjoy doing practical things for others who are in need.", 79);
         INSERT INTO question (content, gift) VALUES ("I feel compelled to expose sin wherever I see it and to challenge people to repentance.", 80);

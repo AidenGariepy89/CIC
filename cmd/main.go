@@ -52,7 +52,10 @@ func main() {
 
 	// Routing
 	e.GET("/", router.Index)
-	e.GET("/q", router.Questions)
+	e.GET("/spiritual-gifts", router.SpiritualGifts)
+    e.POST("/spiritual-gifts/submit", router.SubmitAnswers)
+	e.GET("/test/q", router.Questions)
+	e.GET("/test/g", router.Gifts)
 
 	// Serve
 	e.Logger.Fatal(e.Start(":42069"))
