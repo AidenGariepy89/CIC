@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "cic/site/pkg/db"
+	"cic/site/pkg/db"
 	"cic/site/pkg/router"
 	"html/template"
 	"io"
@@ -30,10 +30,10 @@ func main() {
 	}
 
 	// Initialize Database
-	// err = db.InitDb("file:tmp/quiz.db")
-	// if err != nil {
-	// 	log.Fatalf("Error creating db: %v\n", err)
-	// }
+	err = db.InitDb("file:tmp/quiz.db")
+	if err != nil {
+		log.Fatalf("Error creating db: %v\n", err)
+	}
 
 	// Setup Echo server
 	e := echo.New()
