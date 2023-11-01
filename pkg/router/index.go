@@ -50,3 +50,15 @@ func Gifts(c echo.Context) error {
 
 	return c.Render(http.StatusOK, "gifts.html", g)
 }
+
+func DeptNews(c echo.Context) error {
+    return c.Render(http.StatusOK, "dept-news.html", nil)
+}
+
+func KenyaTrip(c echo.Context) error {
+    return c.Render(http.StatusOK, "kenya2024.html", nil)
+}
+
+func Dashboard(c echo.Context) error {
+    return c.Render(http.StatusOK, "dashboard.html", nil)
+}
