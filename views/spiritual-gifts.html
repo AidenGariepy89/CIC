@@ -4,12 +4,14 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Spiritual Gifts Survey</title>
+        {{ template "head.html" . }}
         <link rel="stylesheet" href="/css/quiz.css">
     </head>
     <body>
+        {{ template "header.html" . }}
         <h1 style="text-align: center;">Spiritual Gifts Survey</h1>
 
-        {{template "_survey.html" .}}
+        {{template "_survey.html" . }}
 
         <h1>Done</h1>
     </body>
