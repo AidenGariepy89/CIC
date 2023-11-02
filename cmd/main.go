@@ -57,6 +57,9 @@ func main() {
 	e.POST("/spiritual-gifts/submit", router.SubmitAnswers)
 	e.GET("/test/q", router.Questions)
 	e.GET("/test/g", router.Gifts)
+    e.GET("/dashboard", router.Dashboard)
+    e.GET("/kenya2024", router.KenyaTrip)
+    e.GET("/dept-news", router.DeptNews)
 
 	// Serve
 	e.Logger.Fatal(e.Start("localhost:42069"))
