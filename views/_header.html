@@ -28,30 +28,31 @@
 
 
 
-                <a href="#" class="text-gray-700 hover:text-blue-500">Department news</a>
-                <a href="#" class="text-gray-700 hover:text-blue-500">Missions</a>
+                <a href="dept-news" class="text-gray-700 hover:text-blue-500">Department news</a>
+                <a href="kenya2024" class="text-gray-700 hover:text-blue-500">Missions</a>
 
             </div>
             <div class="hidden md:flex items-center space-x-1">
-                <a href="#" class="py-5 px-3 text-gray-700 hover:text-gray-900">Dashboard</a>
-                <a href="#" class="py-2 px-6 bg bg-yellow-400 text-yellow-800 rounded-full">Login</a>
+                <a href="dashboard" class="py-5 px-3 text-gray-700 hover:text-blue-500">Dashboard</a>
+                <a href="#" class="py-2 px-6 bg bg-yellow-400 text-yellow-800 hover:bg-yellow-300 rounded-full">Login</a>
             </div>
 
             <!-- Hamburger Icon -->
-            <button id="menu-btn" class="block hamburger md:hidden focus:outline-none">
-                <span id="hamburger-top"></span><span id="hamburger-middle"></span><span id="hamburger-bottom"></span>
+            <button id="menu-btn" class="block text-right hamburger md:hidden focus:outline-none">
+                <span class="hamburger-top"></span><span class="hamburger-middle"></span><span class="hamburger-bottom"></span>
             </button>
 
             <!-- Mobile Menu -->
-            <div class="md:hidden">
-                <div id="menu" class="absolute flex flex-col items-center self-end py-8 mt-10 space-y-6 font-bold bg-white sm:w-auto sm:self-center left-6 right-6 drop-shadow-md">
-                    <a href="#" class="text-gray-700 hover:text-blue-500">Tests</a>
-                    <a href="#" class="text-gray-700 hover:text-blue-500">Department news</a>
-                    <a href="#" class="text-gray-700 hover:text-blue-500">Missions</a>
-                    <a href="#" class="py-5 px-3 text-gray-700 hover:text-gray-900">Dashboard</a>
-                    <a href="#" class="py-2 px-6 bg bg-yellow-400 text-yellow-800 rounded-full">Login</a>
-                </div>
+        </div>
+        <div class="md:hidden">
+            <div id="menu" class="menu absolute flex-col items-center hidden self-end py-8 space-y-6 font-bold bg-white sm:w-auto sm:self-center left-6 right-6 drop-shadow-md">
+                <a href="spiritual-gifts" class="text-gray-700 hover:text-blue-500">Tests</a>
+                <a href="dept-news" class="text-gray-700 hover:text-blue-500">Department news</a>
+                <a href="kenya2024" class="text-gray-700 hover:text-blue-500">Missions</a>
+                <a href="dashboard" class="py-5 px-3 text-gray-700 hover:text-blue-500">Dashboard</a>
+                <a href="#" class="py-2 px-6 bg bg-yellow-400 text-yellow-800 hover:bg-yellow-300 rounded-full">Login</a>
             </div>
         </div>
+        <script src="/js/menu.js" defer></script>
     </nav>
 </header>
