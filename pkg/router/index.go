@@ -21,16 +21,18 @@ func SpiritualGifts(c echo.Context) error {
 }
 
 func SubmitAnswers(c echo.Context) error {
-	// var answer gifts.Answer
-	// err := c.Bind(&answer)
-	// if err != nil {
-	//     return err
-	// }
+	var answer gifts.Answer
+	err := c.Bind(&answer)
+	if err != nil {
+		return err
+	}
 
-	var val string
-	val = c.Param("content")
+	err = gifts.SubmitAnswer(answer.Answer, 1, answer.QuestionId)
+	if err != nil {
+		return err
+	}
 
-	return c.String(http.StatusOK, fmt.Sprintf("Go it: '%#v'", val))
+	return c.String(http.StatusOK, fmt.Sprintf("Question %v: %v", answer.QuestionId, answer.Answer))
 }
 
 func Questions(c echo.Context) error {
@@ -49,4 +51,20 @@ func Gifts(c echo.Context) error {
 	}
 
 	return c.Render(http.StatusOK, "gifts.html", g)
+}
+
+func DeptNews(c echo.Context) error {
+	return c.Render(http.StatusOK, "dept-news.html", nil)
+}
+
+func KenyaTrip(c echo.Context) error {
+	return c.Render(http.StatusOK, "kenya2024.html", nil)
+}
+
+func Dashboard(c echo.Context) error {
+	return c.Render(http.StatusOK, "dashboard.html", nil)
+}
+
+func Test(c echo.Context) error {
+	return c.String(http.StatusOK, "<h3><i>Greetings</i></h3>")
 }

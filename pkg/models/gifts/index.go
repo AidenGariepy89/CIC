@@ -22,8 +22,8 @@ type Question struct {
 type Answer struct {
 	Id         int
 	UserId     int
-	QuestionId int
-    Answer     int `form:"answer"`// Range: [0, 3]
+	QuestionId int `form:"questionId"`
+	Answer     int `form:"answer"` // Range: [0, 3]
 }
 
 func GetQuestions() (*[]Question, error) {
@@ -140,11 +140,36 @@ func GetUserAnswers(userId int) (*[]Answer, error) {
 }
 
 func SubmitAnswer(answer int, userId int, questionId int) error {
-	_, err := db.Db.Exec(fmt.Sprintf(
+	rows, err := db.Db.Query(fmt.Sprintf(
+		"select id from answer where userId = %v and questionId = %v",
+		userId,
+		questionId,
+	))
+	if err != nil {
+		return fmt.Errorf("Error retrieving existing answers from db: %w\n", err)
+	}
+
+	count := 0
+	for rows.Next() {
+		count += 1
+	}
+
+	if count > 0 {
+		_, err = db.Db.Exec(fmt.Sprintf(
+			"update answer set answer = %v where userId = %v and questionId = %v",
+			answer,
+			userId,
+			questionId,
+		))
+
+		return nil
+	}
+
+	_, err = db.Db.Exec(fmt.Sprintf(
 		"insert into answer (answer, userId, questionId) values (%v, %v, %v)",
-        answer,
-        userId,
-        questionId,
+		answer,
+		userId,
+		questionId,
 	))
 	if err != nil {
 		return fmt.Errorf("Error inserting answer: %w\n", err)

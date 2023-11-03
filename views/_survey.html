@@ -1,19 +1,22 @@
 <link rel="stylesheet" href="/css/quiz.css">
+<script src="/js/survey.js" defer></script>
 <ul>
     {{range $q := .}}
-    <form class="question" action="/spiritual-gifts/submit" method="POST">
+    <form id="question-{{$q.Id}}" class="question" hx-trigger="ballons" hx-post="/spiritual-gifts/submit">
         <h2>{{$q.Content}}</h2>
         <ul>
-            <input id="question-{{$q.Id}}-3" type="radio" name="answer">
+            <input id="question-{{$q.Id}}-3" type="radio" name="answer" value="3">
             <label for="question-{{$q.Id}}-3">Consistently, definitely true</label>
-            <input id="question-{{$q.Id}}-2" type="radio" name="answer">
+            <input id="question-{{$q.Id}}-2" type="radio" name="answer" value="2">
             <label for="question-{{$q.Id}}-2">Most of the time, usually true</label>
-            <input id="question-{{$q.Id}}-1" type="radio" name="answer">
+            <input id="question-{{$q.Id}}-1" type="radio" name="answer" value="1">
             <label for="question-{{$q.Id}}-1">Some of the time, once in a while</label>
-            <input id="question-{{$q.Id}}-0" type="radio" name="answer">
+            <input id="question-{{$q.Id}}-0" type="radio" name="answer" value="0">
             <label for="question-{{$q.Id}}-0">Not at all, never</label>
             <input type="submit">
+            <input type="hidden" name="questionId" value="{{$q.Id}}">
         </ul>
     </form>
     {{end}}
 </ul>
+<button onclick="submitAll()">Submit all</button>
