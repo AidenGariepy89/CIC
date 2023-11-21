@@ -23,7 +23,7 @@ type Answer struct {
 	Id         int
 	UserId     int
 	QuestionId int
-    Answer     int `form:"answer"`// Range: [0, 3]
+	Answer     int `form:"answer"` // Range: [0, 3]
 }
 
 func GetQuestions() (*[]Question, error) {
@@ -142,9 +142,9 @@ func GetUserAnswers(userId int) (*[]Answer, error) {
 func SubmitAnswer(answer int, userId int, questionId int) error {
 	_, err := db.Db.Exec(fmt.Sprintf(
 		"insert into answer (answer, userId, questionId) values (%v, %v, %v)",
-        answer,
-        userId,
-        questionId,
+		answer,
+		userId,
+		questionId,
 	))
 	if err != nil {
 		return fmt.Errorf("Error inserting answer: %w\n", err)
