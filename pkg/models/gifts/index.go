@@ -10,13 +10,12 @@ type Gift struct {
 	Id          int
 	Name        string
 	Description string
-	Key         rune
 }
 
 type Question struct {
 	Id      int
 	Content string
-	Gift    rune
+	GiftId  int
 }
 
 type Answer struct {
@@ -27,7 +26,7 @@ type Answer struct {
 }
 
 func GetQuestions() (*[]Question, error) {
-	rows, err := db.Db.Query("SELECT * FROM question LIMIT 5")
+	rows, err := db.Db.Query("SELECT * FROM question")
 	if err != nil {
 		return nil, fmt.Errorf("Error fetching questions from db: %w\n", err)
 	}
@@ -36,14 +35,14 @@ func GetQuestions() (*[]Question, error) {
 	for rows.Next() {
 		var id int
 		var content string
-		var gift rune
+		var giftId int
 
-		err = rows.Scan(&id, &content, &gift)
+		err = rows.Scan(&id, &content, &giftId)
 		if err != nil {
 			return nil, fmt.Errorf("Error scanning question: %w\n", err)
 		}
 
-		questions = append(questions, Question{id, content, gift})
+		questions = append(questions, Question{id, content, giftId})
 	}
 
 	return &questions, nil
@@ -53,18 +52,18 @@ func GetQuestion(id int) (*Question, error) {
 	row := db.Db.QueryRow(fmt.Sprintf("SELECT * FROM question WHERE id = %v", id))
 
 	var content string
-	var gift rune
+	var giftId int
 
-	err := row.Scan(&id, &content, &gift)
+	err := row.Scan(&id, &content, &giftId)
 	if err != nil {
 		return nil, fmt.Errorf("Error retrieving row: %w", err)
 	}
 
-	return &Question{id, content, gift}, nil
+	return &Question{id, content, giftId}, nil
 }
 
-func GetQuestionsByGift(gift rune) (*[]Question, error) {
-	rows, err := db.Db.Query(fmt.Sprintf("SELECT * FROM question WHERE gift = %v", gift))
+func GetQuestionsByGift(gift *Gift) (*[]Question, error) {
+	rows, err := db.Db.Query(fmt.Sprintf("SELECT * FROM question WHERE giftId = %v", gift.Id))
 	if err != nil {
 		return nil, fmt.Errorf("Error fetching questions from db: %w\n", err)
 	}
@@ -73,14 +72,14 @@ func GetQuestionsByGift(gift rune) (*[]Question, error) {
 	for rows.Next() {
 		var id int
 		var content string
-		var gift rune
+		var giftId int
 
 		err = rows.Scan(&id, &content, &gift)
 		if err != nil {
 			return nil, fmt.Errorf("Error scanning question: %w\n", err)
 		}
 
-		questions = append(questions, Question{id, content, gift})
+		questions = append(questions, Question{id, content, giftId})
 	}
 
 	return &questions, nil
@@ -97,14 +96,13 @@ func GetGifts() (*[]Gift, error) {
 		var id int
 		var name string
 		var description string
-		var key rune
 
-		err = rows.Scan(&id, &name, &description, &key)
+		err = rows.Scan(&id, &name, &description)
 		if err != nil {
 			return nil, fmt.Errorf("Error scanning question: %w\n", err)
 		}
 
-		gifts = append(gifts, Gift{id, name, description, key})
+		gifts = append(gifts, Gift{id, name, description})
 	}
 
 	return &gifts, nil
@@ -176,4 +174,61 @@ func SubmitAnswer(answer int, userId int, questionId int) error {
 	}
 
 	return nil
+}
+
+func ProcessSpiritualGiftsResults(userId int) (*Gift, error) {
+	rows, err := db.Db.Query(
+		"select answer, giftId from answer inner join question on answer.questionId = question.id where userId = ? order by answer desc",
+		userId,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("Error retrieving results from db: %w", err)
+	}
+
+	results := []struct {
+		answer int
+		giftId int
+	}{}
+	for rows.Next() {
+		var answer int
+		var giftId int
+
+		err = rows.Scan(&answer, &giftId)
+		if err != nil {
+			return nil, fmt.Errorf("Error scanning data from db: %w", err)
+		}
+
+		results = append(results, struct {
+			answer int
+			giftId int
+		}{answer, giftId})
+	}
+
+	buckets := make(map[int]int)
+
+	for _, result := range results {
+		buckets[result.giftId] += result.answer
+	}
+
+	largestBucket := 0
+	targetGiftId := 0
+	for key, value := range buckets {
+		if value > largestBucket {
+			largestBucket = value
+			targetGiftId = key
+		}
+	}
+
+	row := db.Db.QueryRow("select * from gift where id = ?", targetGiftId)
+
+	var id int
+	var name string
+	var description string
+
+	err = row.Scan(&id, &name, &description)
+	if err != nil {
+		return nil, fmt.Errorf("Error scanning gift from db: %w", err)
+	}
+
+	return &Gift{Id: id, Name: name, Description: description}, nil
 }

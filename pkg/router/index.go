@@ -3,6 +3,7 @@ package router
 import (
 	"cic/site/pkg/models/gifts"
 	"cmp"
+	"fmt"
 	"net/http"
 	"slices"
 	"strconv"
@@ -94,5 +95,10 @@ func SubmitAnswers(c echo.Context) error {
 		}
 	}
 
-	return c.String(http.StatusOK, "Working?")
+	results, err := gifts.ProcessSpiritualGiftsResults(1)
+	if err != nil {
+		return err
+	}
+
+	return c.String(http.StatusOK, fmt.Sprintf("Top gift: %v", results.Name))
 }
