@@ -100,5 +100,13 @@ func SubmitAnswers(c echo.Context) error {
 		return err
 	}
 
-	return c.String(http.StatusOK, fmt.Sprintf("Top gift: %v", results.Name))
+	return c.String(http.StatusOK, fmt.Sprintf(
+		"Top Gift: %v with %v points | Second Gift: %v with %v points | Third Gift: %v with %v points ",
+		results.First.Name,
+		results.FirstPoints,
+		results.Second.Name,
+		results.SecondPoints,
+		results.Third.Name,
+		results.ThirdPoints,
+	))
 }

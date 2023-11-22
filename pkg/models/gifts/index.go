@@ -3,7 +3,9 @@ package gifts
 import (
 	"cic/site/pkg/db"
 	"cic/site/pkg/models/user"
+	"cmp"
 	"fmt"
+	"slices"
 )
 
 type Gift struct {
@@ -23,6 +25,15 @@ type Answer struct {
 	UserId     int
 	QuestionId int `form:"questionId"`
 	Answer     int `form:"answer"` // Range: [0, 3]
+}
+
+type Results struct {
+	First        Gift
+	Second       Gift
+	Third        Gift
+	FirstPoints  int
+	SecondPoints int
+	ThirdPoints  int
 }
 
 func GetQuestions() (*[]Question, error) {
@@ -176,7 +187,7 @@ func SubmitAnswer(answer int, userId int, questionId int) error {
 	return nil
 }
 
-func ProcessSpiritualGiftsResults(userId int) (*Gift, error) {
+func ProcessSpiritualGiftsResults(userId int) (*Results, error) {
 	rows, err := db.Db.Query(
 		"select answer, giftId from answer inner join question on answer.questionId = question.id where userId = ? order by answer desc",
 		userId,
@@ -210,16 +221,33 @@ func ProcessSpiritualGiftsResults(userId int) (*Gift, error) {
 		buckets[result.giftId] += result.answer
 	}
 
-	largestBucket := 0
-	targetGiftId := 0
-	for key, value := range buckets {
-		if value > largestBucket {
-			largestBucket = value
-			targetGiftId = key
-		}
+	buckets_slice := []struct {
+		key int
+		val int
+	}{}
+	for key, val := range buckets {
+		buckets_slice = append(buckets_slice, struct {
+			key int
+			val int
+		}{key, val})
 	}
 
-	row := db.Db.QueryRow("select * from gift where id = ?", targetGiftId)
+	slices.SortFunc(buckets_slice, func(a, b struct {
+		key int
+		val int
+	}) int {
+		return cmp.Compare(b.val, a.val)
+	})
+
+	firstGiftId := buckets_slice[0].key
+	secondGiftId := buckets_slice[1].key
+	thirdGiftId := buckets_slice[2].key
+	firstLargestBucket := buckets_slice[0].val
+	secondLargestBucket := buckets_slice[1].val
+	thirdLargestBucket := buckets_slice[2].val
+
+	// First Gift
+	row := db.Db.QueryRow("select * from gift where id = ?", firstGiftId)
 
 	var id int
 	var name string
@@ -230,5 +258,35 @@ func ProcessSpiritualGiftsResults(userId int) (*Gift, error) {
 		return nil, fmt.Errorf("Error scanning gift from db: %w", err)
 	}
 
-	return &Gift{Id: id, Name: name, Description: description}, nil
+	firstGift := Gift{Id: id, Name: name, Description: description}
+
+	// Second Gift
+	row = db.Db.QueryRow("select * from gift where id = ?", secondGiftId)
+
+	err = row.Scan(&id, &name, &description)
+	if err != nil {
+		return nil, fmt.Errorf("Error scanning gift from db: %w", err)
+	}
+
+	secondGift := Gift{Id: id, Name: name, Description: description}
+
+	// Third Gift
+	row = db.Db.QueryRow("select * from gift where id = ?", thirdGiftId)
+
+	err = row.Scan(&id, &name, &description)
+	if err != nil {
+		return nil, fmt.Errorf("Error scanning gift from db: %w", err)
+	}
+
+	thirdGift := Gift{Id: id, Name: name, Description: description}
+
+	// return &Gift{Id: id, Name: name, Description: description}, nil
+	return &Results{
+		First:        firstGift,
+		Second:       secondGift,
+		Third:        thirdGift,
+		FirstPoints:  firstLargestBucket,
+		SecondPoints: secondLargestBucket,
+		ThirdPoints:  thirdLargestBucket,
+	}, nil
 }
