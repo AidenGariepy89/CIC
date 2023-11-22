@@ -81,7 +81,7 @@ func setupAnswers(db *sql.DB) error {
         answer INTEGER NOT NULL,
         FOREIGN KEY(userId) REFERENCES user(id),
         FOREIGN KEY(questionId) REFERENCES question(id)
-    )`)
+        )`)
 	if err != nil {
 		return err
 	}
@@ -94,7 +94,7 @@ func setupUsers(db *sql.DB) error {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL,
         password TEXT NOT NULL
-    )`)
+        )`)
 	if err != nil {
 		return err
 	}
@@ -103,7 +103,7 @@ func setupUsers(db *sql.DB) error {
         INSERT INTO user (username, password) VALUES ("admin", "admin");
         INSERT INTO user (username, password) VALUES ("demo", "demo");
         COMMIT;
-    `)
+        `)
 
 	return nil
 }
@@ -114,7 +114,7 @@ func setupGifts(db *sql.DB) error {
         name TEXT NOT NULL,
         description TEXT NOT NULL,
         key INTEGER NOT NULL
-    )`)
+        )`)
 	if err != nil {
 		return err
 	}
@@ -140,7 +140,7 @@ func setupGifts(db *sql.DB) error {
         INSERT INTO gift (name, description, key) VALUES ("Teaching", "", 82);
         INSERT INTO gift (name, description, key) VALUES ("Wisdom", "", 83);
         COMMIT;
-    `)
+        `)
 	if err != nil {
 		return err
 	}
@@ -153,7 +153,7 @@ func setupQuestions(db *sql.DB) error {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         content TEXT NOT NULL,
         gift INTEGER NOT NULL
-    )`)
+        )`)
 	if err != nil {
 		return err
 	}
@@ -300,7 +300,7 @@ func setupQuestions(db *sql.DB) error {
         INSERT INTO question (content, gift) VALUES ("I have insights into how to solve problems that others often do not see.", 83);
 
         COMMIT;
-    `)
+        `)
 
 	if err != nil {
 		return err

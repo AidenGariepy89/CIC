@@ -22,12 +22,26 @@ go install github.com/cosmtrek/air@latest
 ```
 This should install `air` globally to your computer.
 
+## Plugins
+
+If you are using VSCode, there are some helpful plugins you should install if you are wanting to edit the styling of the site.
+
+* Tailwind CSS IntelliSense: Allows for autocompletion of tailwind styles
+* Prettier: Allows for sorting of css classess
+
+
+
 ## Project Dependencies
 
 In your terminal, you'll need to run this command to grab the packages that the
 project will use to run the server:
 ```sh
-go mod tidy
+go mod tidy 
+```
+
+In addition, you will need to install the packages required for tailwind:
+```sh
+npm install
 ```
 
 Now you should be all setup to run the project!

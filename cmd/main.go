@@ -63,5 +63,5 @@ func main() {
 	e.GET("/dept-news", router.DeptNews)
 
 	// Serve
-	e.Logger.Fatal(e.Start(":42069"))
+	e.Logger.Fatal(e.Start("localhost:42069"))
 }
