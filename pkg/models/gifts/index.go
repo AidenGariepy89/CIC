@@ -27,7 +27,7 @@ type Answer struct {
 }
 
 func GetQuestions() (*[]Question, error) {
-	rows, err := db.Db.Query("SELECT * FROM question")
+	rows, err := db.Db.Query("SELECT * FROM question LIMIT 5")
 	if err != nil {
 		return nil, fmt.Errorf("Error fetching questions from db: %w\n", err)
 	}

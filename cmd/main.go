@@ -55,7 +55,7 @@ func main() {
 	e.GET("/", router.Index)
 	e.GET("/spiritual-gifts", router.SpiritualGifts)
 	e.POST("/spiritual-gifts/submit", router.SubmitAnswers)
-    e.GET("/htmx-test", router.Test)
+	e.GET("/htmx-test", router.Test)
 	e.GET("/test/q", router.Questions)
 	e.GET("/test/g", router.Gifts)
 	e.GET("/dashboard", router.Dashboard)

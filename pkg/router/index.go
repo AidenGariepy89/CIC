@@ -2,8 +2,11 @@ package router
 
 import (
 	"cic/site/pkg/models/gifts"
-	"fmt"
+	"cmp"
 	"net/http"
+	"slices"
+	"strconv"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -18,21 +21,6 @@ func SpiritualGifts(c echo.Context) error {
 		return err
 	}
 	return c.Render(http.StatusOK, "spiritual-gifts.html", questions)
-}
-
-func SubmitAnswers(c echo.Context) error {
-	var answer gifts.Answer
-	err := c.Bind(&answer)
-	if err != nil {
-		return err
-	}
-
-	err = gifts.SubmitAnswer(answer.Answer, 1, answer.QuestionId)
-	if err != nil {
-		return err
-	}
-
-	return c.String(http.StatusOK, fmt.Sprintf("Question %v: %v", answer.QuestionId, answer.Answer))
 }
 
 func Questions(c echo.Context) error {
@@ -67,4 +55,44 @@ func Dashboard(c echo.Context) error {
 
 func Test(c echo.Context) error {
 	return c.String(http.StatusOK, "<h3><i>Greetings</i></h3>")
+}
+
+func SubmitAnswers(c echo.Context) error {
+	params, err := c.FormParams()
+	if err != nil {
+		return err
+	}
+
+	answers := []gifts.Answer{}
+
+	for param := range params {
+		id, err := strconv.Atoi(strings.Split(param, "-")[1])
+		if err != nil {
+			return err
+		}
+
+		answer, err := strconv.Atoi(c.FormValue(param))
+		if err != nil {
+			return err
+		}
+
+		answers = append(answers, gifts.Answer{
+			UserId:     1,
+			QuestionId: id,
+			Answer:     answer,
+		})
+	}
+
+	slices.SortFunc(answers, func(a, b gifts.Answer) int {
+		return cmp.Compare(a.QuestionId, b.QuestionId)
+	})
+
+	for _, answer := range answers {
+		err := gifts.SubmitAnswer(answer.Answer, answer.UserId, answer.QuestionId)
+		if err != nil {
+			return err
+		}
+	}
+
+	return c.String(http.StatusOK, "Working?")
 }
