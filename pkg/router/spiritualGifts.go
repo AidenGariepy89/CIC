@@ -14,7 +14,7 @@ import (
 
 func SpiritualGiftsRoutes(e *echo.Echo) {
 	router := e.Group("/spiritual-gifts")
-	router.GET("/", spiritualGifts)
+	router.GET("", spiritualGifts)
 	router.POST("/submit", submitAnswers)
 }
 
