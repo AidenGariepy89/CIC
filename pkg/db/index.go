@@ -118,6 +118,7 @@ func setupGifts(db *sql.DB) error {
 		return err
 	}
 
+    // Should be in a csv
 	_, err = db.Exec(`BEGIN TRANSACTION;
         INSERT INTO gift (id, name, description) VALUES (1, "Administration", "");
         INSERT INTO gift (id, name, description) VALUES (2, "Apostleship", "");
@@ -158,6 +159,7 @@ func setupQuestions(db *sql.DB) error {
 		return err
 	}
 
+    // Should be csv
 	_, err = db.Exec(`BEGIN TRANSACTION;
         INSERT INTO question (content, giftId) VALUES ("I like to organize people, tasks, and events.", 1);
         INSERT INTO question (content, giftId) VALUES ("I would like to start churches in places where they do not presently exist.", 2);

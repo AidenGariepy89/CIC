@@ -2,29 +2,26 @@ package router
 
 import (
 	"cic/site/pkg/models/gifts"
-	"cmp"
-	"fmt"
 	"net/http"
-	"slices"
-	"strconv"
-	"strings"
 
 	"github.com/labstack/echo/v4"
 )
 
-func Index(c echo.Context) error {
+func BaseRoutes(e *echo.Echo) {
+	e.GET("/", indexRoute)
+	e.GET("/htmx-test", test)
+	e.GET("/test/q", questionsTest)
+	e.GET("/test/g", giftsTest)
+	e.GET("/dashboard", dashboard)
+	e.GET("/kenya2024", kenyaTrip)
+	e.GET("/dept-news", deptNews)
+}
+
+func indexRoute(c echo.Context) error {
 	return c.Render(http.StatusOK, "index.html", nil)
 }
 
-func SpiritualGifts(c echo.Context) error {
-	questions, err := gifts.GetQuestions()
-	if err != nil {
-		return err
-	}
-	return c.Render(http.StatusOK, "spiritual-gifts.html", questions)
-}
-
-func Questions(c echo.Context) error {
+func questionsTest(c echo.Context) error {
 	questions, err := gifts.GetQuestions()
 	if err != nil {
 		return err
@@ -33,7 +30,7 @@ func Questions(c echo.Context) error {
 	return c.Render(http.StatusOK, "questions.html", questions)
 }
 
-func Gifts(c echo.Context) error {
+func giftsTest(c echo.Context) error {
 	g, err := gifts.GetGifts()
 	if err != nil {
 		return err
@@ -42,71 +39,18 @@ func Gifts(c echo.Context) error {
 	return c.Render(http.StatusOK, "gifts.html", g)
 }
 
-func DeptNews(c echo.Context) error {
+func deptNews(c echo.Context) error {
 	return c.Render(http.StatusOK, "dept-news.html", nil)
 }
 
-func KenyaTrip(c echo.Context) error {
+func kenyaTrip(c echo.Context) error {
 	return c.Render(http.StatusOK, "kenya2024.html", nil)
 }
 
-func Dashboard(c echo.Context) error {
+func dashboard(c echo.Context) error {
 	return c.Render(http.StatusOK, "dashboard.html", nil)
 }
 
-func Test(c echo.Context) error {
+func test(c echo.Context) error {
 	return c.String(http.StatusOK, "<h3><i>Greetings</i></h3>")
-}
-
-func SubmitAnswers(c echo.Context) error {
-	params, err := c.FormParams()
-	if err != nil {
-		return err
-	}
-
-	answers := []gifts.Answer{}
-
-	for param := range params {
-		id, err := strconv.Atoi(strings.Split(param, "-")[1])
-		if err != nil {
-			return err
-		}
-
-		answer, err := strconv.Atoi(c.FormValue(param))
-		if err != nil {
-			return err
-		}
-
-		answers = append(answers, gifts.Answer{
-			UserId:     1,
-			QuestionId: id,
-			Answer:     answer,
-		})
-	}
-
-	slices.SortFunc(answers, func(a, b gifts.Answer) int {
-		return cmp.Compare(a.QuestionId, b.QuestionId)
-	})
-
-	for _, answer := range answers {
-		err := gifts.SubmitAnswer(answer.Answer, answer.UserId, answer.QuestionId)
-		if err != nil {
-			return err
-		}
-	}
-
-	results, err := gifts.ProcessSpiritualGiftsResults(1)
-	if err != nil {
-		return err
-	}
-
-	return c.String(http.StatusOK, fmt.Sprintf(
-		"Top Gift: %v with %v points | Second Gift: %v with %v points | Third Gift: %v with %v points ",
-		results.First.Name,
-		results.FirstPoints,
-		results.Second.Name,
-		results.SecondPoints,
-		results.Third.Name,
-		results.ThirdPoints,
-	))
 }

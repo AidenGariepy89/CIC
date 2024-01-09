@@ -188,6 +188,9 @@ func SubmitAnswer(answer int, userId int, questionId int) error {
 }
 
 func ProcessSpiritualGiftsResults(userId int) (*Results, error) {
+	// This function is awful.
+	// Needs to be made better.
+
 	rows, err := db.Db.Query(
 		"select answer, giftId from answer inner join question on answer.questionId = question.id where userId = ? order by answer desc",
 		userId,
