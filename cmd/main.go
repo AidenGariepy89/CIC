@@ -52,14 +52,9 @@ func main() {
 	e.Static("/img", "public/img")
 
 	// Routing
-	e.GET("/", router.Index)
-	e.GET("/spiritual-gifts", router.SpiritualGifts)
-	e.POST("/spiritual-gifts/submit", router.SubmitAnswers)
-	e.GET("/test/q", router.Questions)
-	e.GET("/test/g", router.Gifts)
-	e.GET("/dashboard", router.Dashboard)
-	e.GET("/kenya2024", router.KenyaTrip)
-	e.GET("/dept-news", router.DeptNews)
+
+	router.BaseRoutes(e)
+	router.SpiritualGiftsRoutes(e)
 
 	// Serve
 	e.Logger.Fatal(e.Start("localhost:42069"))

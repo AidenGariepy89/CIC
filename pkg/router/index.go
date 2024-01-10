@@ -2,38 +2,26 @@ package router
 
 import (
 	"cic/site/pkg/models/gifts"
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
 
-func Index(c echo.Context) error {
+func BaseRoutes(e *echo.Echo) {
+	e.GET("/", indexRoute)
+	e.GET("/htmx-test", test)
+	e.GET("/test/q", questionsTest)
+	e.GET("/test/g", giftsTest)
+	e.GET("/dashboard", dashboard)
+	e.GET("/kenya2024", kenyaTrip)
+	e.GET("/dept-news", deptNews)
+}
+
+func indexRoute(c echo.Context) error {
 	return c.Render(http.StatusOK, "index.html", nil)
 }
 
-func SpiritualGifts(c echo.Context) error {
-	questions, err := gifts.GetQuestions()
-	if err != nil {
-		return err
-	}
-	return c.Render(http.StatusOK, "spiritual-gifts.html", questions)
-}
-
-func SubmitAnswers(c echo.Context) error {
-	// var answer gifts.Answer
-	// err := c.Bind(&answer)
-	// if err != nil {
-	//     return err
-	// }
-
-	var val string
-	val = c.Param("content")
-
-	return c.String(http.StatusOK, fmt.Sprintf("Go it: '%#v'", val))
-}
-
-func Questions(c echo.Context) error {
+func questionsTest(c echo.Context) error {
 	questions, err := gifts.GetQuestions()
 	if err != nil {
 		return err
@@ -42,7 +30,7 @@ func Questions(c echo.Context) error {
 	return c.Render(http.StatusOK, "questions.html", questions)
 }
 
-func Gifts(c echo.Context) error {
+func giftsTest(c echo.Context) error {
 	g, err := gifts.GetGifts()
 	if err != nil {
 		return err
@@ -51,14 +39,18 @@ func Gifts(c echo.Context) error {
 	return c.Render(http.StatusOK, "gifts.html", g)
 }
 
-func DeptNews(c echo.Context) error {
+func deptNews(c echo.Context) error {
 	return c.Render(http.StatusOK, "dept-news.html", nil)
 }
 
-func KenyaTrip(c echo.Context) error {
+func kenyaTrip(c echo.Context) error {
 	return c.Render(http.StatusOK, "kenya2024.html", nil)
 }
 
-func Dashboard(c echo.Context) error {
+func dashboard(c echo.Context) error {
 	return c.Render(http.StatusOK, "dashboard.html", nil)
+}
+
+func test(c echo.Context) error {
+	return c.String(http.StatusOK, "<h3><i>Greetings</i></h3>")
 }
