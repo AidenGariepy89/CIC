@@ -52,7 +52,6 @@ func main() {
 	e.Static("/img", "public/img")
 
 	// Routing
-
 	router.BaseRoutes(e)
 	router.SpiritualGiftsRoutes(e)
 
