@@ -56,5 +56,5 @@ func main() {
 	router.SpiritualGiftsRoutes(e)
 
 	// Serve
-	e.Logger.Fatal(e.Start("localhost:42069"))
+	e.Logger.Fatal(e.Start("localhost:12345"))
 }

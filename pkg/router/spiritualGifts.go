@@ -15,10 +15,13 @@ import (
 func SpiritualGiftsRoutes(e *echo.Echo) {
 	router := e.Group("/spiritual-gifts")
 	router.GET("", spiritualGifts)
+	router.GET("/asdf", recalculateAnswers)
 	router.POST("/submit", submitAnswers)
 }
 
 func spiritualGifts(c echo.Context) error {
+	fmt.Printf("SLDJFOSDIJFOISDFJ")
+
 	questions, err := gifts.GetQuestions()
 	if err != nil {
 		return err
@@ -63,6 +66,23 @@ func submitAnswers(c echo.Context) error {
 		}
 	}
 
+	results, err := gifts.ProcessSpiritualGiftsResults(1)
+	if err != nil {
+		return err
+	}
+
+	return c.String(http.StatusOK, fmt.Sprintf(
+		"Top Gift: %v with %v points | Second Gift: %v with %v points | Third Gift: %v with %v points ",
+		results.First.Name,
+		results.FirstPoints,
+		results.Second.Name,
+		results.SecondPoints,
+		results.Third.Name,
+		results.ThirdPoints,
+	))
+}
+
+func recalculateAnswers(c echo.Context) error {
 	results, err := gifts.ProcessSpiritualGiftsResults(1)
 	if err != nil {
 		return err
